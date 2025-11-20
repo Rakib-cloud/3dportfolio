@@ -10,7 +10,7 @@ const HomeInfo = ({ currentStage }) => {
         <span className='font-semibold mx-2 text-white'>RAKIBUL ISLAM</span>
         👋
         <br />
-        A Code Alchemist from Bangladesh 🇧🇩
+        Senior Software Engineer @ ACI Limited 🚀
       </h1>
     );
 
@@ -18,7 +18,8 @@ const HomeInfo = ({ currentStage }) => {
     return (
       <div className='info-box'>
         <p className='font-medium sm:text-xl text-center'>
-          Worked with many Projects <br /> and picked up many skills along the way
+          3.5+ years building scalable enterprise solutions <br /> 
+          Specialized in Healthcare & Full-Stack Development
         </p>
 
         <Link to='/about' className='neo-brutalism-white neo-btn'>
@@ -33,11 +34,12 @@ const HomeInfo = ({ currentStage }) => {
     return (
       <div className='info-box'>
         <p className='font-medium text-center sm:text-xl'>
-          Led multiple projects to success over the years. <br /> Curious about the impact?
+          Contributed to nationwide healthcare platforms <br /> 
+          like Shukhee, Lifespring & Grameen Eye Hospital
         </p>
 
         <Link to='/projects' className='neo-brutalism-white neo-btn'>
-          Visit my portfolio
+          View my work
           <img src={arrow} alt='arrow' className='w-4 h-4 object-contain' />
         </Link>
       </div>
@@ -48,11 +50,12 @@ const HomeInfo = ({ currentStage }) => {
     return (
       <div className='info-box'>
       <p className='font-medium sm:text-xl text-center'>
-        Need a project done or looking for a dev? <br/> I'm just a few keystrokes away
+        Looking to build something amazing? <br/> 
+        Let's collaborate on your next project
       </p>
 
       <Link to='/contact' className='neo-brutalism-white neo-btn'>
-        Let's talk
+        Get in touch
         <img src={arrow} alt='arrow' className='w-4 h-4 object-contain' />
       </Link>
     </div>

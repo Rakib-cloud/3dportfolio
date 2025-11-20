@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import { socialLinks } from "../constants";
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer className='footer font-poppins'>
-      <hr className='border-slate-200' />
+    <footer className='footer font-poppins dark:bg-[#000000] transition-colors duration-300'>
+      <hr className='border-slate-200 dark:border-gray-700' />
 
       <div className='footer-container'>
-        <p>
-          © 2024 <strong>Rakibul Islam</strong>. All rights reserved.
+        <p className='dark:text-white'>
+          © {currentYear} <strong>Rakibul Islam</strong>. All rights reserved.
         </p>
 
         <div className='flex gap-3 justify-center items-center'>
@@ -18,7 +20,7 @@ const Footer = () => {
               <img
                 src={link.iconUrl}
                 alt={link.name}
-                className='w-6 h-6 object-contain'
+                className='w-6 h-6 object-contain dark:invert transition-all hover:scale-110'
               />
             </Link>
           ))}
