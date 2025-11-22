@@ -1,394 +1,9 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
-import { Suspense } from "react";
-import { MeshDistortMaterial, Sphere, Torus, Box, Text3D, Center, Html } from "@react-three/drei";
-import * as THREE from 'three';
+import { useState, useEffect } from "react";
 import { arrow } from "../assets/icons";
 
-// Simple Floating Tech Icon - Minimal animation
-function FloatingTechLogo({ tech, position, index }) {
-  const groupRef = useRef();
-  
-  useFrame((state) => {
-    if (groupRef.current) {
-      // Very gentle floating motion only (slower)
-      groupRef.current.position.y = position[1] + Math.sin(state.clock.getElapsedTime() * 0.15 + index) * 0.2;
-    }
-  });
-
-  return (
-    <group ref={groupRef} position={position}>
-      {/* Fixed size icon - no transformations */}
-      <Html
-        transform
-        center
-        distanceFactor={8}
-        style={{
-          width: '90px',
-          height: '90px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'white',
-          borderRadius: '16px',
-          padding: '14px',
-          pointerEvents: 'none',
-          border: `2px solid ${tech.color}`,
-          boxShadow: `0 4px 12px ${tech.color}40`,
-        }}
-      >
-        <img 
-          src={tech.icon} 
-          alt={tech.name}
-          style={{ 
-            width: '62px', 
-            height: '62px',
-            objectFit: 'contain',
-          }}
-        />
-      </Html>
-    </group>
-  );
-}
-
-// Network Nodes with connecting lines
-function NetworkNodes() {
-  const groupRef = useRef();
-  
-  useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-    }
-  });
-
-  const nodes = [
-    [-4, 3, -3], [4, 3, -3], [-4, -3, -3], [4, -3, -3],
-    [0, 0, 0], [-2, 1, 1], [2, 1, 1], [0, -2, 1]
-  ];
-
-  return (
-    <group ref={groupRef}>
-      {nodes.map((position, i) => (
-        <NetworkNode key={i} position={position} />
-      ))}
-    </group>
-  );
-}
-
-function NetworkNode({ position }) {
-  const nodeRef = useRef();
-  
-  useFrame((state) => {
-    if (nodeRef.current) {
-      nodeRef.current.scale.x = 1 + Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
-      nodeRef.current.scale.y = 1 + Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
-      nodeRef.current.scale.z = 1 + Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
-    }
-  });
-
-  return (
-    <mesh ref={nodeRef} position={position}>
-      <sphereGeometry args={[0.2, 32, 32]} />
-      <meshStandardMaterial 
-        color="#06b6d4" 
-        emissive="#06b6d4"
-        emissiveIntensity={0.5}
-        metalness={1}
-        roughness={0.1}
-      />
-    </mesh>
-  );
-}
-
-// Floating Holographic Screens
-function HolographicScreens() {
-  return (
-    <>
-      {[...Array(5)].map((_, i) => (
-        <HoloScreen key={i} position={[
-          (Math.random() - 0.5) * 15,
-          (Math.random() - 0.5) * 10,
-          (Math.random() - 0.5) * 10 - 5
-        ]} />
-      ))}
-    </>
-  );
-}
-
-function HoloScreen({ position }) {
-  const meshRef = useRef();
-  const speed = 0.3 + Math.random() * 0.2;
-  
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = Math.sin(state.clock.getElapsedTime() * speed) * 0.3;
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.getElapsedTime() * speed * 0.5) * 1;
-    }
-  });
-
-  return (
-    <mesh ref={meshRef} position={position}>
-      <planeGeometry args={[2, 1.5]} />
-      <meshStandardMaterial 
-        color="#8b5cf6"
-        transparent
-        opacity={0.3}
-        metalness={0.9}
-        roughness={0.1}
-        emissive="#8b5cf6"
-        emissiveIntensity={0.2}
-      />
-    </mesh>
-  );
-}
-
-// Rotating Tech Rings (like orbital rings)
-function TechRings() {
-  return (
-    <>
-      <RotatingRing radius={4} speed={0.5} color="#3b82f6" position={[0, 0, -3]} />
-      <RotatingRing radius={5.5} speed={-0.3} color="#8b5cf6" position={[0, 0, -3]} />
-      <RotatingRing radius={7} speed={0.4} color="#06b6d4" position={[0, 0, -3]} />
-    </>
-  );
-}
-
-function RotatingRing({ radius, speed, color, position }) {
-  const ringRef = useRef();
-  
-  useFrame((state) => {
-    if (ringRef.current) {
-      ringRef.current.rotation.x = 1;
-      ringRef.current.rotation.y = state.clock.getElapsedTime() * speed;
-    }
-  });
-
-  return (
-    <mesh ref={ringRef} position={position}>
-      <torusGeometry args={[radius, 0.05, 16, 100]} />
-      <meshStandardMaterial 
-        color={color}
-        emissive={color}
-        emissiveIntensity={0.5}
-        metalness={1}
-        roughness={0.2}
-      />
-    </mesh>
-  );
-}
-
-// Data Cubes floating and rotating
-function DataCubes() {
-  return (
-    <>
-      {[...Array(15)].map((_, i) => (
-        <DataCube key={i} position={[
-          (Math.random() - 0.5) * 20,
-          (Math.random() - 0.5) * 15,
-          (Math.random() - 0.5) * 15 - 5
-        ]} />
-      ))}
-    </>
-  );
-}
-
-function DataCube({ position }) {
-  const cubeRef = useRef();
-  const speed = Math.random() * 0.5 + 0.3;
-  
-  useFrame((state) => {
-    if (cubeRef.current) {
-      cubeRef.current.rotation.x += 0.01 * speed;
-      cubeRef.current.rotation.y += 0.01 * speed;
-      cubeRef.current.position.y = position[1] + Math.sin(state.clock.getElapsedTime() * speed * 0.3) * 0.5;
-    }
-  });
-
-  return (
-    <mesh ref={cubeRef} position={position}>
-      <boxGeometry args={[0.5, 0.5, 0.5]} />
-      <meshStandardMaterial 
-        color="#3b82f6"
-        wireframe
-        emissive="#3b82f6"
-        emissiveIntensity={0.3}
-      />
-    </mesh>
-  );
-}
-
-// Particle System - Tech particles floating
-function TechParticles() {
-  const particlesRef = useRef();
-  const count = 100;
-  const positions = new Float32Array(count * 3);
-  
-  for (let i = 0; i < count * 3; i++) {
-    positions[i] = (Math.random() - 0.5) * 30;
-  }
-  
-  useFrame((state) => {
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-      
-      const positions = particlesRef.current.geometry.attributes.position.array;
-      for (let i = 0; i < positions.length; i += 3) {
-        positions[i + 1] += Math.sin(state.clock.getElapsedTime() + i) * 0.01;
-      }
-      particlesRef.current.geometry.attributes.position.needsUpdate = true;
-    }
-  });
-  
-  return (
-    <points ref={particlesRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.1}
-        color="#06b6d4"
-        sizeAttenuation
-        transparent
-        opacity={0.8}
-      />
-    </points>
-  );
-}
-
-// Hexagonal Grid Pattern
-function HexGrid() {
-  const groupRef = useRef();
-  
-  useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.z = Math.sin(state.clock.getElapsedTime() * 0.2) * 0.1;
-    }
-  });
-  
-  const hexagons = [];
-  for (let i = 0; i < 20; i++) {
-    hexagons.push({
-      position: [
-        (Math.random() - 0.5) * 25,
-        (Math.random() - 0.5) * 20,
-        -10 + Math.random() * 5
-      ],
-      scale: 0.3 + Math.random() * 0.5
-    });
-  }
-  
-  return (
-    <group ref={groupRef}>
-      {hexagons.map((hex, i) => (
-        <Hexagon key={i} position={hex.position} scale={hex.scale} />
-      ))}
-    </group>
-  );
-}
-
-function Hexagon({ position, scale }) {
-  const meshRef = useRef();
-  
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.z = state.clock.getElapsedTime() * 0.2;
-    }
-  });
-  
-  return (
-    <mesh ref={meshRef} position={position} scale={scale}>
-      <cylinderGeometry args={[1, 1, 0.1, 6]} />
-      <meshStandardMaterial 
-        color="#8b5cf6"
-        wireframe
-        emissive="#8b5cf6"
-        emissiveIntensity={0.2}
-        transparent
-        opacity={0.4}
-      />
-    </mesh>
-  );
-}
-
-// 3D Tech Card Component
-function TechCard3D({ tech, position, index }) {
-  const meshRef = useRef();
-  const textRef = useRef();
-  
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = Math.sin(state.clock.getElapsedTime() + index) * 0.3;
-      meshRef.current.rotation.x = Math.cos(state.clock.getElapsedTime() * 0.5 + index) * 0.2;
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.getElapsedTime() * 0.5 + index) * 0.3;
-    }
-  });
-  
-  return (
-    <group position={position}>
-      <mesh ref={meshRef}>
-        <boxGeometry args={[1.5, 1.5, 0.3]} />
-        <meshStandardMaterial 
-          color={tech.color}
-          metalness={0.9}
-          roughness={0.1}
-          emissive={tech.color}
-          emissiveIntensity={0.3}
-        />
-      </mesh>
-      
-      {/* Tech name on card */}
-      <mesh position={[0, 0, 0.16]}>
-        <planeGeometry args={[1.4, 0.3]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
-      </mesh>
-    </group>
-  );
-}
-
-// Container for all 3D floating tech logos
-function TechLogos3D({ techStack }) {
-  const groupRef = useRef();
-  
-  useFrame((state) => {
-    if (groupRef.current) {
-      // Very slow, smooth rotation
-      groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.01;
-    }
-  });
-  
-  // Arrange logos in a circular pattern
-  const radius = 6;
-  const positions = techStack.map((_, i) => {
-    const angle = (i / techStack.length) * Math.PI * 2;
-    const layer = Math.floor(i / 6); // 6 icons per layer
-    return [
-      Math.cos(angle) * (radius + layer * 1.5),
-      (Math.sin(angle) * 2) + (layer * 1.5),
-      Math.sin(angle) * (radius + layer * 1.5) - 8
-    ];
-  });
-  
-  return (
-    <group ref={groupRef}>
-      {techStack.map((tech, i) => (
-        <FloatingTechLogo 
-          key={i} 
-          tech={tech} 
-          position={positions[i]} 
-          index={i}
-        />
-      ))}
-    </group>
-  );
-}
-
 const Home = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const techStack = [
     { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", name: "React.js", color: "#61DAFB" },
@@ -412,28 +27,38 @@ const Home = () => {
     { value: "10+", label: "Enterprise Solutions" },
   ];
 
+  // Auto-play carousel - always running
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % techStack.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [techStack.length]);
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % techStack.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + techStack.length) % techStack.length);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
+
+  // Get visible cards (current + 1 on each side = 3 cards total)
+  const getVisibleCards = () => {
+    const cards = [];
+    for (let i = -1; i <= 1; i++) {
+      const index = (currentIndex + i + techStack.length) % techStack.length;
+      cards.push({ tech: techStack[index], position: i, index });
+    }
+    return cards;
+  };
+
   return (
-    <section className='w-full min-h-screen relative bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:!bg-[#000000] overflow-hidden'>
-      {/* Three.js Animated 3D Background with Tech Logos */}
-      <div className='absolute inset-0 z-0 pointer-events-none'>
-        <Canvas 
-          camera={{ position: [0, 0, 15], fov: 60 }}
-          gl={{ 
-            alpha: true, 
-            antialias: true,
-            powerPreference: "high-performance"
-          }}
-          dpr={[1, 2]}
-        >
-          <Suspense fallback={null}>
-            {/* Stable Lighting */}
-            <ambientLight intensity={1} />
-            
-            {/* Main 3D Tech Icons */}
-            <TechLogos3D techStack={techStack} />
-          </Suspense>
-        </Canvas>
-      </div>
+    <section className='w-full min-h-screen relative bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:bg-gradient-to-br dark:from-[#0d0d0d] dark:via-[#0a0a0a] dark:to-[#0d0d0d] overflow-hidden'>
 
       {/* Hero Section */}
       <div className='max-w-7xl mx-auto px-8 pt-32 pb-16 relative z-10'>
@@ -463,7 +88,7 @@ const Home = () => {
             </Link>
             <Link 
               to='/contact' 
-              className='px-8 py-4 bg-white dark:bg-[#0f0f0f] text-gray-900 dark:text-white rounded-lg font-semibold text-lg border-2 border-gray-900 dark:border-gray-800 hover:bg-gray-900 hover:text-white dark:hover:bg-gray-900 transform hover:-translate-y-1 hover:scale-110 transition-all duration-300'
+              className='px-8 py-4 bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white rounded-lg font-semibold text-lg border-2 border-gray-900 dark:border-gray-700 hover:bg-gray-900 hover:text-white dark:hover:bg-gray-800 transform hover:-translate-y-1 hover:scale-110 transition-all duration-300'
             >
               Get In Touch
             </Link>
@@ -474,7 +99,7 @@ const Home = () => {
             {stats.map((stat, index) => (
               <div 
                 key={index} 
-                className='bg-white dark:bg-[#0f0f0f] rounded-2xl p-6 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-center border-2 border-gray-100 dark:border-gray-900'
+                className='bg-white dark:bg-[#1a1a1a] rounded-2xl p-6 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-center border-2 border-gray-100 dark:border-gray-800'
               >
                 <div className='text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2'>
                   {stat.value}
@@ -485,33 +110,33 @@ const Home = () => {
           </div>
 
           {/* Key Highlights */}
-          <div className='card-3d bg-white dark:bg-[#0f0f0f] rounded-3xl p-8 shadow-xl mb-16 border-2 border-gray-100 dark:border-gray-900 relative overflow-hidden'>
-            <div className='absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5'></div>
+          <div className='card-3d bg-white dark:bg-[#1a1a1a] rounded-3xl p-8 shadow-xl mb-16 border-2 border-gray-100 dark:border-gray-800 relative overflow-hidden'>
+            <div className='absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 dark:from-blue-500/10 dark:via-purple-500/10 dark:to-cyan-500/10'></div>
             <div className='relative z-10'>
               <h3 className='text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center'>Key Highlights</h3>
               <div className='grid md:grid-cols-4 gap-6'>
-                <div className='text-center p-4 card-3d bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-[#0a0a1a] dark:to-[#0f0f1f] rounded-xl'>
+                <div className='text-center p-4 card-3d bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-[#151515] dark:to-[#1a1a1a] rounded-xl border border-transparent dark:border-gray-800'>
                   <div className='text-4xl mb-3'>🏥</div>
                   <h4 className='font-semibold text-lg mb-2 text-gray-900 dark:text-white'>Healthcare Innovation</h4>
                   <p className='text-gray-600 dark:text-gray-400 text-sm'>
                     Contributed to nationwide platforms like Shukhee, Lifespring & Grameen Eye Hospital
                   </p>
                 </div>
-                <div className='text-center p-4 card-3d bg-gradient-to-br from-purple-50 to-blue-50 dark:from-[#0a0a1a] dark:to-[#0f0f1f] rounded-xl'>
+                <div className='text-center p-4 card-3d bg-gradient-to-br from-purple-50 to-blue-50 dark:from-[#151515] dark:to-[#1a1a1a] rounded-xl border border-transparent dark:border-gray-800'>
                   <div className='text-4xl mb-3'>🏢</div>
                   <h4 className='font-semibold text-lg mb-2 text-gray-900 dark:text-white'>Enterprise Solutions</h4>
                   <p className='text-gray-600 dark:text-gray-400 text-sm'>
                     Building in-house enterprise software at ACI Limited with Django & FastAPI
                   </p>
                 </div>
-                <div className='text-center p-4 card-3d bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-[#0a0a1a] dark:to-[#0f0f1f] rounded-xl'>
+                <div className='text-center p-4 card-3d bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-[#151515] dark:to-[#1a1a1a] rounded-xl border border-transparent dark:border-gray-800'>
                   <div className='text-4xl mb-3'>⚡</div>
                   <h4 className='font-semibold text-lg mb-2 text-gray-900 dark:text-white'>Performance Focused</h4>
                   <p className='text-gray-600 dark:text-gray-400 text-sm'>
                     Building scalable, intuitive, and high-performance user experiences
                   </p>
                 </div>
-                <div className='text-center p-4 card-3d bg-gradient-to-br from-blue-50 to-purple-50 dark:from-[#0a0a1a] dark:to-[#0f0f1f] rounded-xl'>
+                <div className='text-center p-4 card-3d bg-gradient-to-br from-blue-50 to-purple-50 dark:from-[#151515] dark:to-[#1a1a1a] rounded-xl border border-transparent dark:border-gray-800'>
                   <div className='text-4xl mb-3'>🚀</div>
                   <h4 className='font-semibold text-lg mb-2 text-gray-900 dark:text-white'>Full-Stack Expertise</h4>
                   <p className='text-gray-600 dark:text-gray-400 text-sm'>
@@ -522,26 +147,146 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Tech Stack */}
+          {/* Tech Stack - 3D Carousel */}
           <div className='text-center mb-12'>
-            <h3 className='text-2xl font-bold text-gray-900 dark:text-white mb-6'>Technologies I Work With</h3>
-            <div className='flex flex-wrap justify-center gap-6'>
-              {techStack.map((tech, index) => (
-                <div 
-                  key={index}
-                  className='group relative bg-white dark:bg-[#0f0f0f] rounded-xl p-4 shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-200 border-2 border-gray-100 dark:border-gray-900 cursor-pointer'
-                >
-                  <img 
-                    src={tech.icon} 
-                    alt={tech.name}
-                    className='w-14 h-14 object-contain'
-                  />
+            <h3 className='text-2xl font-bold text-gray-900 dark:text-white mb-8'>Technologies I Work With</h3>
+            
+            {/* 3D Carousel Container */}
+            <div className='relative w-full h-[250px] flex items-center justify-center perspective-1000' style={{ perspective: '1000px' }}>
+              {/* Cards */}
+              <div className='relative w-full h-full flex items-center justify-center'>
+                {getVisibleCards().map(({ tech, position, index }) => {
+                  const isCenter = position === 0;
+                  const distance = Math.abs(position);
                   
-                  {/* Tooltip */}
-                  <div className='absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 dark:bg-gray-700 text-white px-3 py-1 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none'>
-                    {tech.name}
-                  </div>
-                </div>
+                  // Calculate 3D transformations
+                  const rotateY = position * 40; // Rotate cards
+                  const translateZ = isCenter ? 0 : -120; // Push non-center cards back
+                  const translateX = position * 220; // Spread cards horizontally
+                  const scale = isCenter ? 1.1 : 0.75; // Scale center card larger
+                  const opacity = isCenter ? 1 : 0.5; // Fade non-center cards
+                  
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => !isCenter && goToSlide(index)}
+                      className={`absolute transition-all duration-700 ease-out cursor-pointer ${
+                        isCenter ? 'z-30' : 'z-10'
+                      }`}
+                      style={{
+                        transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                        opacity: opacity,
+                        transformStyle: 'preserve-3d',
+                      }}
+                    >
+                      <div 
+                        className={`relative bg-white dark:bg-[#1a1a1a] rounded-xl p-6 shadow-2xl border-2 transition-all duration-500 ${
+                          isCenter 
+                            ? 'border-blue-500 dark:border-blue-400 shadow-blue-500/50' 
+                            : 'border-gray-200 dark:border-gray-800'
+                        }`}
+                        style={{
+                          width: '160px',
+                          height: '160px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '12px',
+                          backfaceVisibility: 'hidden',
+                        }}
+                      >
+                        {/* Tech Icon */}
+                        <div className={`transition-all duration-500 ${isCenter ? 'scale-110' : 'scale-90'}`}>
+                          <img 
+                            src={tech.icon} 
+                            alt={tech.name}
+                            className='w-16 h-16 object-contain'
+                            style={{
+                              filter: isCenter ? 'none' : 'grayscale(60%)',
+                            }}
+                          />
+                        </div>
+                        
+                        {/* Tech Name */}
+                        <div className={`text-center transition-all duration-500 ${
+                          isCenter ? 'opacity-100' : 'opacity-60'
+                        }`}>
+                          <h4 className='font-bold text-base text-gray-900 dark:text-white mb-1'>
+                            {tech.name}
+                          </h4>
+                          {isCenter && (
+                            <div 
+                              className='h-0.5 w-10 mx-auto rounded-full transition-all duration-500'
+                              style={{ backgroundColor: tech.color }}
+                            ></div>
+                          )}
+                        </div>
+
+                        {/* Glow Effect for Center Card */}
+                        {isCenter && (
+                          <div 
+                            className='absolute inset-0 rounded-xl opacity-20 blur-xl'
+                            style={{ backgroundColor: tech.color }}
+                          ></div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={prevSlide}
+                className='absolute left-0 md:left-8 z-40 p-2.5 bg-white dark:bg-[#1a1a1a] rounded-full shadow-lg hover:shadow-xl border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 hover:scale-110 group'
+                aria-label='Previous'
+              >
+                <svg 
+                  className='w-5 h-5 text-gray-700 dark:text-white transition-transform group-hover:-translate-x-1' 
+                  fill='none' 
+                  strokeLinecap='round' 
+                  strokeLinejoin='round' 
+                  strokeWidth='2' 
+                  viewBox='0 0 24 24' 
+                  stroke='currentColor'
+                >
+                  <path d='M15 19l-7-7 7-7'></path>
+                </svg>
+              </button>
+
+              <button
+                onClick={nextSlide}
+                className='absolute right-0 md:right-8 z-40 p-2.5 bg-white dark:bg-[#1a1a1a] rounded-full shadow-lg hover:shadow-xl border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 hover:scale-110 group'
+                aria-label='Next'
+              >
+                <svg 
+                  className='w-5 h-5 text-gray-700 dark:text-white transition-transform group-hover:translate-x-1' 
+                  fill='none' 
+                  strokeLinecap='round' 
+                  strokeLinejoin='round' 
+                  strokeWidth='2' 
+                  viewBox='0 0 24 24' 
+                  stroke='currentColor'
+                >
+                  <path d='M9 5l7 7-7 7'></path>
+                </svg>
+              </button>
+            </div>
+
+            {/* Dot Indicators */}
+            <div className='flex justify-center gap-2 mt-6'>
+              {techStack.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`transition-all duration-300 rounded-full ${
+                    index === currentIndex
+                      ? 'w-8 h-3 bg-gradient-to-r from-blue-600 to-purple-600'
+                      : 'w-3 h-3 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                ></button>
               ))}
             </div>
           </div>

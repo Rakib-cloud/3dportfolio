@@ -16,16 +16,16 @@ const About = () => {
     setMounted(true);
   }, []);
   return (
-    <section className={`max-container bg-transparent dark:bg-[#000000] min-h-screen transition-opacity duration-1000 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
-      <h1 className='head-text text-gray-900 dark:!text-white relative z-10 animate-fadeInUp'>
+    <section className={`max-container bg-transparent dark:bg-[#0a0a0a] min-h-screen transition-opacity duration-1000 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+      <h1 className='head-text text-gray-900 dark:!text-white animate-fadeInUp'>
         Hello, I'm{" "}
-        <span className='blue-gradient_text dark:!bg-gradient-to-r dark:!from-blue-400 dark:!to-purple-400 dark:!bg-clip-text dark:!text-transparent font-semibold drop-shadow'>
+        <span className='blue-gradient_text dark:bg-gradient-to-r dark:from-blue-400 dark:to-purple-400 dark:bg-clip-text dark:text-transparent font-semibold'>
           Rakibul Islam
         </span>{" "}
         👋
       </h1>
 
-      <div className='mt-5 flex flex-col gap-3 text-slate-600 dark:!text-gray-200 relative z-10'>
+      <div className='mt-5 flex flex-col gap-3 text-slate-600 dark:text-gray-300'>
         <p>
           A Frontend Engineer with <strong>3.5+ years of experience</strong> in React, Next.js, TypeScript, and Tailwind CSS, 
           delivering scalable, user-focused solutions with strong knowledge of modern front-end and backend integration practices.
@@ -49,8 +49,8 @@ const About = () => {
         </p>
       </div>
 
-      <div className='py-10 flex flex-col relative z-10'>
-        <h3 className='subhead-text text-gray-900 dark:!text-white'>My Skills</h3>
+      <div className='py-10 flex flex-col'>
+        <h3 className='subhead-text text-gray-900 dark:text-white'>My Skills</h3>
 
         <div className='mt-16 flex flex-wrap gap-12'>
           {skills.map((skill, index) => (
@@ -63,7 +63,7 @@ const About = () => {
               }}
             >
               <div className='btn-back rounded-xl transition-all duration-300 group-hover:scale-110' />
-              <div className='btn-front rounded-xl flex justify-center items-center bg-white/90 dark:bg-[#0f0f0f]/90 backdrop-blur-sm transition-all duration-300 group-hover:shadow-2xl group-hover:rotate-12'>
+              <div className='btn-front rounded-xl flex justify-center items-center bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-sm transition-all duration-300 group-hover:shadow-2xl group-hover:rotate-12'>
                 <img
                   src={skill.imageUrl}
                   alt={skill.name}
@@ -79,9 +79,9 @@ const About = () => {
         </div>
       </div>
 
-      <div className='py-16 relative z-10'>
-        <h3 className='subhead-text text-gray-900 dark:!text-white'>Work Experience.</h3>
-        <div className='mt-5 flex flex-col gap-3 text-slate-600 dark:!text-gray-200'>
+      <div className='py-16'>
+        <h3 className='subhead-text text-gray-900 dark:text-white'>Work Experience.</h3>
+        <div className='mt-5 flex flex-col gap-3 text-slate-600 dark:text-gray-300'>
           <p>
             Throughout my career, I've had the privilege to work with innovative companies, 
             building enterprise solutions and contributing to healthcare transformation in Bangladesh. 
@@ -89,7 +89,7 @@ const About = () => {
           </p>
         </div>
 
-        <div className='mt-12 flex relative z-10'>
+        <div className='mt-12 flex'>
           <VerticalTimeline>
             {experiences.map((experience, index) => (
               <VerticalTimelineElement
@@ -119,11 +119,11 @@ const About = () => {
                 className='group'
               >
                 <div className='transition-all duration-300 group-hover:translate-x-2'>
-                  <h3 className='text-black dark:!text-white text-xl font-poppins font-semibold'>
+                  <h3 className='text-black dark:text-white text-xl font-poppins font-semibold'>
                     {experience.title}
                   </h3>
                   <p
-                    className='text-black-500 dark:!text-gray-300 font-medium text-base'
+                    className='text-black-500 dark:text-gray-300 font-medium text-base'
                     style={{ margin: 0 }}
                   >
                     {experience.company_name}
@@ -134,7 +134,7 @@ const About = () => {
                   {experience.points.map((point, index) => (
                     <li
                       key={`experience-point-${index}`}
-                      className='text-black-500/70 dark:!text-gray-300 font-normal pl-1 text-sm transition-all duration-300 hover:text-black dark:hover:!text-white hover:translate-x-1'
+                      className='text-black-500/70 dark:text-gray-400 font-normal pl-1 text-sm transition-all duration-300 hover:text-black dark:hover:text-white hover:translate-x-1'
                     >
                       {point}
                     </li>

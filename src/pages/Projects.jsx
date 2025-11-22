@@ -16,10 +16,10 @@ const Projects = () => {
   const companies = Object.keys(projectsByCompany);
 
   return (
-    <section className={`max-container bg-transparent dark:bg-[#000000] min-h-screen transition-opacity duration-1000 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
-      <h1 className='head-text text-gray-900 dark:!text-white animate-fadeInUp'>
+    <section className={`max-container bg-transparent dark:bg-[#0a0a0a] min-h-screen transition-opacity duration-1000 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+      <h1 className='head-text text-gray-900 dark:text-white animate-fadeInUp'>
         My{" "}
-        <span className='blue-gradient_text dark:!bg-gradient-to-r dark:!from-blue-400 dark:!to-purple-400 dark:!bg-clip-text dark:!text-transparent drop-shadow font-semibold'>
+        <span className='blue-gradient_text dark:bg-gradient-to-r dark:from-blue-400 dark:to-purple-400 dark:bg-clip-text dark:text-transparent drop-shadow font-semibold'>
           Projects
         </span>
       </h1>
@@ -77,11 +77,11 @@ const Projects = () => {
               </div>
             </div>
 
-            <div className='mt-5 flex flex-col bg-white dark:bg-[#0f0f0f] p-6 rounded-2xl border-2 border-gray-100 dark:border-gray-900 transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 group-hover:border-blue-500 dark:group-hover:border-blue-600'>
-              <h4 className='text-2xl font-poppins font-semibold text-gray-900 dark:!text-white transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:!text-blue-400'>
+            <div className='mt-5 flex flex-col bg-white dark:bg-[#1a1a1a] p-6 rounded-2xl border-2 border-gray-100 dark:border-gray-800 transition-all duration-300 group-hover:shadow-2xl group-hover:-translate-y-2 group-hover:border-blue-500 dark:group-hover:border-blue-600'>
+              <h4 className='text-2xl font-poppins font-semibold text-gray-900 dark:text-white transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400'>
                 {project.name}
               </h4>
-              <p className='mt-2 text-slate-600 dark:!text-gray-300'>{project.description}</p>
+              <p className='mt-2 text-slate-600 dark:text-gray-300'>{project.description}</p>
               <div className='mt-5 flex items-center gap-2 font-poppins'>
                 {project.link !== '#' ? (
                   <Link

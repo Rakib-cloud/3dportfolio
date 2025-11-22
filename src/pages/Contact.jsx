@@ -72,7 +72,7 @@ const Contact = () => {
   };
 
   return (
-    <section className='relative flex lg:flex-row flex-col max-container bg-transparent dark:bg-[#000000] min-h-screen'>
+    <section className='relative flex lg:flex-row flex-col max-container bg-transparent dark:bg-[#0a0a0a] min-h-screen'>
       {alert.show && <Alert {...alert} />}
 
       <div className='flex-1 min-w-[50%] flex flex-col'>

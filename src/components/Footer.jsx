@@ -6,8 +6,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className='footer font-poppins dark:bg-[#000000] transition-colors duration-300'>
-      <hr className='border-slate-200 dark:border-gray-700' />
+    <footer className='footer font-poppins dark:bg-[#0a0a0a] transition-colors duration-300'>
+      <hr className='border-slate-200 dark:border-gray-800' />
 
       <div className='footer-container'>
         <p className='dark:text-white'>

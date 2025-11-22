@@ -23,7 +23,7 @@ const App = () => {
   };
 
   return (
-    <main className='bg-slate-300/20 dark:bg-[#000000] transition-colors duration-300'>
+    <main className='bg-slate-300/20 dark:bg-[#0a0a0a] transition-colors duration-300'>
       <Router>
         <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
         <Routes>

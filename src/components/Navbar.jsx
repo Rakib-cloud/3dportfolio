@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 const Navbar = ({ darkMode, toggleDarkMode }) => {
   return (
-    <header className='header dark:bg-[#000000]/98 backdrop-blur-sm transition-colors duration-300 border-b dark:border-gray-900'>
+    <header className='header dark:bg-[#0a0a0a]/98 backdrop-blur-sm transition-colors duration-300 border-b border-gray-200 dark:border-gray-800'>
       <NavLink to='/'>
           <div className={'w-[64px] h-[64px] flex items-center justify-center '}>
               <img src="https://i.ibb.co/HtLqcg9/logo.png" alt='logo' className='border rounded-full bg-sky-200'/>
